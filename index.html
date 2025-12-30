@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Minimal Blog</title>
+  <meta name="description" content="A simple blog page with a button, form, video, and file attachment." />
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-M2VCXK15NR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M2VCXK15NR');
+</script>
+  <style>
+    :root {
+      --bg: #0f172a;       /* slate-900 */
+      --card: #111827;     /* gray-900 */
+      --text: #e5e7eb;     /* gray-200 */
+      --muted: #9ca3af;    /* gray-400 */
+      --primary: #38bdf8;  /* sky-400 */
+      --accent: #a78bfa;   /* violet-400 */
+      --success: #22c55e;  /* green-500 */
+      --danger: #ef4444;   /* red-500 */
+      --border: #1f2937;   /* gray-800 */
+    }
+    .light {
+      --bg: #f8fafc;       /* slate-50 */
+      --card: #ffffff;
+      --text: #0f172a;     /* slate-900 */
+      --muted: #475569;    /* slate-600 */
+      --primary: #0ea5e9;  /* sky-500 */
+      --accent: #7c3aed;   /* violet-600 */
+      --success: #16a34a;  /* green-600 */
+      --danger: #dc2626;   /* red-600 */
+      --border: #e5e7eb;   /* gray-200 */
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Layout */
+    header {
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; backdrop-filter: blur(8px);
+      background: color-mix(in oklab, var(--bg) 85%, transparent);
+      z-index: 10;
+    }
+    .container {
+      max-width: 1000px;
+      padding: 0 1rem;
+      margin: 0 auto;
+    }
+    nav { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 0; }
+    nav .brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; letter-spacing: 0.3px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.875rem; padding: 0.25rem 0.6rem; border: 1px solid var(--border);
+      border-radius: 999px; color: var(--muted);
+    }
+
+    .hero {
+      padding: 3.5rem 0 2rem;
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem;
+    }
+    @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1rem;
+    }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1rem; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--primary); color: #001018; font-weight: 600; cursor: pointer;
+      box-shadow: 0 6px 20px color-mix(in oklab, var(--primary) 24%, transparent);
+      transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn.secondary {
+      background: transparent; color: var(--text);
+      border-color: var(--border);
+    }
+
+    .section { padding: 2rem 0; }
+    h1, h2 { margin: 0.25rem 0 0.5rem; line-height: 1.2; }
+    h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); }
+    h2 { font-size: clamp(1.3rem, 2.8vw, 1.6rem); }
+    p { color: var(--muted); margin: 0.4rem 0 1rem; }
+
+    .grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    }
+    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+
+    /* Form */
+    form { display: grid; gap: 0.75rem; }
+    label { font-weight: 600; color: var(--text); font-size: 0.95rem; }
+    .input {
+      width: 100%; padding: 0.65rem 0.75rem; border-radius: 10px;
+      background: color-mix(in oklab, var(--card) 85%, var(--bg));
+      border: 1px solid var(--border); color: var(--text);
+      outline: none; transition: border-color 120ms ease, box-shadow 120ms ease;
+    }
+    .input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 22%, transparent);
+    }
+    .help { font-size: 0.85rem; color: var(--muted); }
+
+    .file-row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .file-name { font-size: 0.9rem; color: var(--accent); }
+
+    .alert {
+      position: fixed; left: 50%; transform: translateX(-50%);
+      bottom: 1rem; background: var(--card); color: var(--text);
+      border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.9rem;
+      box-shadow: 0 10px 24px color-mix(in oklab, var(--accent) 18%, transparent);
+      opacity: 0; pointer-events: none; transition: opacity 160ms ease, bottom 160ms ease;
+    }
+    .alert.show { opacity: 1; bottom: 1.4rem; }
+
+    /* Video */
+    .video-wrap { position: relative; width: 100%; padding-top: 56.25%; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+    .video-wrap iframe, .video-wrap video {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+    }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); padding: 1.2rem 0; color: var(--muted); }
+    .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; }
+    .switch {
+      display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none;
+    }
+    .switch input { appearance: none; width: 42px; height: 24px; border-radius: 999px; background: var(--border); position: relative; outline: none; transition: background 160ms ease; }
+    .switch input::after {
+      content: ""; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 999px;
+      background: var(--text); transition: transform 160ms ease, background 160ms ease;
+    }
+    .switch input:checked { background: var(--primary); }
+    .switch input:checked::after { transform: translateX(18px); background: #001018; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="brand">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
+            <path d="M7 12h10M12 7v10" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          <span>My Minimal Blog</span>
+        </div>
+        <div class="pill">A calm corner on the internet</div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="card">
+        <h1>Thoughts, notes, and small wins</h1>
+        <p>Welcome. This is a tiny blog where I share honest takes, short tutorials, and weekend experiments. It’s simple on purpose.</p>
+        <div style="display:flex; gap:0.75rem; flex-wrap: wrap;">
+          <button id="ctaBtn" class="btn" type="button">
+            <!-- Button -->
+            Get in touch
+          </button>
+          <a class="btn secondary" href="#latest" role="button">Latest posts</a>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Featured video</h2>
+        <p class="help">A quick walkthrough on building your first webpage with HTML, CSS, and JavaScript.</p>
+        <div class="video-wrap">
+          <!-- Embedded video -->
+          <iframe
+            src="https://www.youtube.com/embed/dD2EISBDjWM"
+            title="Learn HTML in 15 Minutes"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="latest" class="section container">
+      <h2>Latest posts</h2>
+      <div class="grid">
+        <article class="card">
+          <h3 style="margin:0.25rem 0">Make small things daily</h3>
+          <p>Shipping tiny projects builds trust with yourself. Keep the scope narrow and the bar low, then celebrate finishing.</p>
+          <p class="help">Posted 12 Dec • 3 min read</p>
+        </article>
+        <article class="card">
+          <h3 style="margin:0.25rem 0">CSS that won’t fight you</h3>
+          <p>Pick a token set, reuse patterns, and prefer components over one-off styles. Future-you will thank present-you.</p>
+          <p class="help">Posted 05 Dec • 4 min read</p>
+        </article>
+        <article class="card">
+          <h3 style="margin:0.25rem 0">A kinder dev workflow</h3>
+          <p>Automate linting, keep tests near the code, and name your commits clearly. Clarity matters more than cleverness.</p>
+          <p class="help">Posted 30 Nov • 5 min read</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="section container">
+      <div class="card">
+        <h2>Contact me</h2>
+        <p>Send a note. I read every message. Attach a file if it helps give context.</p>
+
+        <!-- Form -->
+        <form id="contactForm" novalidate>
+          <div>
+            <label for="name">Name</label>
+            <input class="input" type="text" id="name" name="name" placeholder="Your full name" required />
+            <div class="help">Required</div>
+          </div>
+
+          <div>
+            <label for="email">Email</label>
+            <input class="input" type="email" id="email" name="email" placeholder="you@example.com" required />
+            <div class="help">We’ll only use this to reply.</div>
+          </div>
+
+          <div>
+            <label for="message">Message</label>
+            <textarea class="input" id="message" name="message" rows="5" placeholder="What’s on your mind?" required></textarea>
+            <div class="help">Be as detailed or as brief as you like.</div>
+          </div>
+
+          <!-- File attachment -->
+          <div>
+            <label for="attachment">Attachment (optional)</label>
+            <div class="file-row">
+              <input class="input" type="file" id="attachment" name="attachment"
+                     accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.jpg,.jpeg,.png" />
+              <span id="fileName" class="file-name" aria-live="polite"></span>
+            </div>
+            <div class="help">Accepted: PDF, DOCX, PPTX, TXT, JPG, PNG</div>
+          </div>
+
+          <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
+            <button class="btn" type="submit">Send message</button>
+            <button class="btn secondary" type="reset">Reset</button>
+            <span id="formStatus" class="help" aria-live="polite"></span>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div>© <span id="year"></span> My Minimal Blog</div>
+      <label class="switch" title="Toggle theme">
+        <input id="themeToggle" type="checkbox" />
+        <span>Light mode</span>
+      </label>
+    </div>
+  </footer>
+
+  <div id="toast" class="alert" role="status" aria-live="polite">Scroll down to send me a message ↓</div>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Theme toggle
+    const toggle = document.getElementById('themeToggle');
+    const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    const root = document.documentElement;
+
+    if (savedTheme === 'light' || (!savedTheme && prefersLight)) {
+      root.classList.add('light'); toggle.checked = true;
+    }
+
+    toggle.addEventListener('change', () => {
+      root.classList.toggle('light', toggle.checked);
+      localStorage.setItem('theme', toggle.checked ? 'light' : 'dark');
+    });
+
+    // CTA button: show toast and scroll to form
+    const ctaBtn = document.getElementById('ctaBtn');
+    const toast = document.getElementById('toast');
+    ctaBtn.addEventListener('click', () => {
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1800);
+      document.getElementById('contact').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    // File input: show filename
+    const fileInput = document.getElementById('attachment');
+    const fileNameEl = document.getElementById('fileName');
+    fileInput.addEventListener('change', () => {
+      const f = fileInput.files[0];
+      fileNameEl.textContent = f ? `Selected: ${f.name}` : '';
+    });
+
+    // Form validation + mock submit
+    const form = document.getElementById('contactForm');
+    const statusEl = document.getElementById('formStatus');
+
+    function validEmail(email) {
+      return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const message = form.message.value.trim();
+
+      // Basic checks
+      if (!name || !email || !message) {
+        statusEl.textContent = 'Please fill out all required fields.';
+        statusEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--danger');
+        return;
+      }
+      if (!validEmail(email)) {
+        statusEl.textContent = 'Please enter a valid email address.';
+        statusEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--danger');
+        return;
+      }
+
+      statusEl.textContent = 'Sending...';
+      statusEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--muted');
+
+      // Simulate network delay
+      setTimeout(() => {
+        statusEl.textContent = 'Thanks! Your message has been sent.';
+        statusEl.style.color = getComputedStyle(document.documentElement).getPropertyValue('--success');
+        form.reset();
+        fileNameEl.textContent = '';
+      }, 900);
+    });
+  </script>
+</body>
+</html>
